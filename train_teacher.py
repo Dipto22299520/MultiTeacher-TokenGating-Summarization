@@ -1,0 +1,395 @@
+"""
+Fine-tuning script for mT5_multilingual_XLSum Teacher Model
+Target: ROUGE-L score of 0.55-0.6
+"""
+
+import os
+import json
+import numpy as np
+import pandas as pd
+from dataclasses import dataclass, field
+from typing import Optional
+import torch
+from datasets import Dataset, DatasetDict
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSeq2SeqLM,
+    Seq2SeqTrainingArguments,
+    Seq2SeqTrainer,
+    DataCollatorForSeq2Seq,
+    EarlyStoppingCallback
+)
+from datetime import datetime
+from rouge_score import rouge_scorer
+
+# Custom tokenizer for Bangla ROUGE evaluation
+class SpaceTokenizer:
+    """Space-based tokenizer for Bangla text."""
+    def tokenize(self, text):
+        return text.split()
+
+# Model configuration
+MODEL_NAME = "csebuetnlp/mT5_multilingual_XLSum"  # mT5 multilingual XLSum model
+MAX_INPUT_LENGTH = 512
+MAX_TARGET_LENGTH = 256  # Increased to 256 to avoid truncation
+BATCH_SIZE = 4  # Reduced for 17GB VRAM — 966M model in bf16
+GRADIENT_ACCUMULATION_STEPS = 8  # Effective batch = 4*8 = 32 (same)
+LEARNING_RATE = 2e-5  # Reduced for large model to prevent forgetting
+NUM_EPOCHS = 5  # Reduced from 10 — small datasets converge faster; early stopping still active
+WARMUP_STEPS = 200
+WEIGHT_DECAY = 0.01
+EVAL_STEPS = 500
+SAVE_STEPS = 500
+LOGGING_STEPS = 50
+SEED = 42
+
+# Paths
+OUTPUT_DIR = "./teachers/tamil_teacher"
+TRAIN_FILE = "./preprocessed_data/tamil/train.csv"  # Default to hindi
+VAL_FILE = "./preprocessed_data/tamil/val.csv"
+TEST_FILE = "./preprocessed_data/tamil/test.csv"
+
+def load_datasets():
+    """Load train, validation, and test datasets."""
+    print("\n" + "=" * 80)
+    print("LOADING DATASETS")
+    print("=" * 80)
+    
+    # Load CSV files
+    train_df = pd.read_csv(TRAIN_FILE)
+    val_df = pd.read_csv(VAL_FILE)
+    test_df = pd.read_csv(TEST_FILE)
+    
+    print(f"\nTrain samples: {len(train_df)}")
+    print(f"Validation samples: {len(val_df)}")
+    print(f"Test samples: {len(test_df)}")
+    
+    # Convert to Hugging Face datasets
+    train_dataset = Dataset.from_pandas(train_df[['text', 'summary']])
+    val_dataset = Dataset.from_pandas(val_df[['text', 'summary']])
+    test_dataset = Dataset.from_pandas(test_df[['text', 'summary']])
+    
+    dataset_dict = DatasetDict({
+        'train': train_dataset,
+        'validation': val_dataset,
+        'test': test_dataset
+    })
+    
+    return dataset_dict
+
+def preprocess_function(examples, tokenizer):
+    """Preprocess the data for T5 model."""
+    # Add "summarize: " prefix for mT5 models (CRITICAL for proper functioning)
+    inputs = ["summarize: " + str(text) for text in examples["text"]]
+    model_inputs = tokenizer(
+        inputs,
+        max_length=MAX_INPUT_LENGTH,
+        truncation=True,
+        padding=False  # Explicitly False - let data collator handle ALL padding
+    )
+    
+    # Setup the tokenizer for targets (data collator will handle padding)
+    targets = [str(summary) for summary in examples["summary"]]
+    labels = tokenizer(
+        text_target=targets,
+        max_length=MAX_TARGET_LENGTH,
+        truncation=True,
+        padding=False  # Explicitly False - let data collator handle ALL padding
+    )
+    
+    model_inputs["labels"] = labels["input_ids"]
+    return model_inputs
+
+def compute_metrics(eval_preds, tokenizer, rouge_scorer_obj):
+    """Compute ROUGE metrics for evaluation with Bangla space-based tokenization."""
+    preds, labels = eval_preds
+    
+    # Replace -100 in both preds and labels (used for padding)
+    preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    
+    # Decode predictions and labels
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+    
+    # Strip whitespace for cleaner comparison
+    decoded_preds = [pred.strip() for pred in decoded_preds]
+    decoded_labels = [label.strip() for label in decoded_labels]
+    
+    # Compute ROUGE scores using rouge_scorer with space-based tokenization
+    rouge1_scores = []
+    rouge2_scores = []
+    rougeL_scores = []
+    
+    for pred, ref in zip(decoded_preds, decoded_labels):
+        scores = rouge_scorer_obj.score(ref, pred)
+        rouge1_scores.append(scores['rouge1'].fmeasure)
+        rouge2_scores.append(scores['rouge2'].fmeasure)
+        rougeL_scores.append(scores['rougeL'].fmeasure)
+    
+    # Average scores
+    result = {
+        "rouge1": np.mean(rouge1_scores),
+        "rouge2": np.mean(rouge2_scores),
+        "rougeL": np.mean(rougeL_scores),
+        "rougeLsum": np.mean(rougeL_scores)  # Use same as rougeL for simplicity
+    }
+    
+    # Add prediction length
+    prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
+    result["gen_len"] = np.mean(prediction_lens)
+    
+    return result
+
+def train_model():
+    """Main training function."""
+    print("\n" + "=" * 80)
+    print("mT5 XLSum TEACHER MODEL FINE-TUNING")
+    print("=" * 80)
+    print(f"\nModel: {MODEL_NAME}")
+    print(f"Max input length: {MAX_INPUT_LENGTH}")
+    print(f"Max target length: {MAX_TARGET_LENGTH}")
+    print(f"Batch size: {BATCH_SIZE}")
+    print(f"Gradient accumulation steps: {GRADIENT_ACCUMULATION_STEPS}")
+    print(f"Effective batch size: {BATCH_SIZE * GRADIENT_ACCUMULATION_STEPS}")
+    print(f"Learning rate: {LEARNING_RATE}")
+    print(f"Number of epochs: {NUM_EPOCHS}")
+    print(f"Using bf16 precision (same as working code)")
+    
+    # Set random seed
+    torch.manual_seed(SEED)
+    np.random.seed(SEED)
+    
+    # Load datasets
+    datasets = load_datasets()
+    
+    # Load tokenizer
+    print("\n" + "=" * 80)
+    print("LOADING TOKENIZER AND MODEL")
+    print("=" * 80)
+    print(f"\nLoading tokenizer from {MODEL_NAME}...")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    
+    # Preprocess datasets
+    print("\nPreprocessing datasets...")
+    tokenized_datasets = datasets.map(
+        lambda examples: preprocess_function(examples, tokenizer),
+        batched=True,
+        remove_columns=datasets["train"].column_names,
+        desc="Tokenizing"
+    )
+    
+    print(f"Preprocessed train samples: {len(tokenized_datasets['train'])}")
+    print(f"Preprocessed validation samples: {len(tokenized_datasets['validation'])}")
+    print(f"Preprocessed test samples: {len(tokenized_datasets['test'])}")
+    
+    # Load model
+    print(f"\nLoading model from {MODEL_NAME}...")
+    model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
+    
+    # Print model size (no config modifications - keep it simple like working code)
+    num_params = sum(p.numel() for p in model.parameters())
+    print(f"Model parameters: {num_params:,} ({num_params/1e6:.1f}M)")
+    
+    # Initialize ROUGE scorer with space-based tokenizer for Bangla
+    print("\nInitializing ROUGE scorer with space-based tokenization for Bangla...")
+    rouge_scorer_obj = rouge_scorer.RougeScorer(
+        ['rouge1', 'rouge2', 'rougeL'], 
+        use_stemmer=False, 
+        tokenizer=SpaceTokenizer()
+    )
+    
+    # Data collator (will handle dynamic padding - use defaults like working code)
+    data_collator = DataCollatorForSeq2Seq(
+        tokenizer=tokenizer,
+        model=model,
+        padding=True
+    )
+    
+    # Training arguments
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_dir = f"{OUTPUT_DIR}_{timestamp}"
+    
+    # Create output and logs directories to avoid TensorBoard errors
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(f"{output_dir}/logs", exist_ok=True)
+    
+    training_args = Seq2SeqTrainingArguments(
+        output_dir=output_dir,
+        
+        # Training hyperparameters
+        num_train_epochs=NUM_EPOCHS,
+        per_device_train_batch_size=BATCH_SIZE,
+        per_device_eval_batch_size=BATCH_SIZE * 2,  # Can use larger batch for eval
+        gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS,
+        learning_rate=LEARNING_RATE,
+        weight_decay=WEIGHT_DECAY,
+        warmup_steps=WARMUP_STEPS,
+        
+        # Use bf16 like the working code
+        fp16=False,
+        bf16=True,
+        
+        # Evaluation and logging
+        eval_strategy="steps",
+        eval_steps=EVAL_STEPS,
+        save_strategy="steps",
+        save_steps=SAVE_STEPS,
+        logging_steps=LOGGING_STEPS,
+        logging_dir=f"{output_dir}/logs",
+        
+        # Generation config for evaluation (optimized for teacher model)
+        predict_with_generate=True,
+        generation_max_length=MAX_TARGET_LENGTH,
+        generation_num_beams=2,  # Reduced from 6 — eval generation is the main bottleneck
+        
+        # Optimization
+        gradient_checkpointing=False,  # Disabled - conflicts with bf16 causing zero gradients
+        
+        # Saving
+        save_total_limit=3,  # Keep only 3 best checkpoints
+        load_best_model_at_end=True,
+        metric_for_best_model="rougeL",
+        greater_is_better=True,
+        
+        # Other settings
+        seed=SEED,
+        report_to="none",  # Disable reporting to avoid potential issues
+        push_to_hub=False,
+        dataloader_num_workers=4,  # More workers to keep GPU fed continuously
+        dataloader_pin_memory=True,  # Faster host→GPU transfer
+        dataloader_prefetch_factor=4,  # Pre-load 4 batches per worker ahead of time
+        remove_unused_columns=False,
+    )
+    
+    # Initialize trainer
+    print("\n" + "=" * 80)
+    print("INITIALIZING TRAINER")
+    print("=" * 80)
+    
+    trainer = Seq2SeqTrainer(
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_datasets["train"],
+        eval_dataset=tokenized_datasets["validation"],
+        data_collator=data_collator,
+        compute_metrics=lambda eval_preds: compute_metrics(eval_preds, tokenizer, rouge_scorer_obj),
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=5)]  # Increased for ROUGE oscillations
+    )
+    
+    # Train
+    print("\n" + "=" * 80)
+    print("STARTING TRAINING")
+    print("=" * 80)
+    print(f"\nOutput directory: {output_dir}")
+    print(f"TensorBoard logs: {output_dir}/logs")
+    print("\nTo monitor training, run:")
+    print(f"tensorboard --logdir {output_dir}/logs")
+    print("\n" + "=" * 80)
+    
+    train_result = trainer.train()
+    
+    # Save the final model
+    print("\n" + "=" * 80)
+    print("SAVING MODEL")
+    print("=" * 80)
+    trainer.save_model(f"{output_dir}/final_model")
+    tokenizer.save_pretrained(f"{output_dir}/final_model")
+    
+    # Save training metrics
+    metrics = train_result.metrics
+    trainer.log_metrics("train", metrics)
+    trainer.save_metrics("train", metrics)
+    
+    # Evaluate on validation set
+    print("\n" + "=" * 80)
+    print("EVALUATING ON VALIDATION SET")
+    print("=" * 80)
+    
+    val_metrics = trainer.evaluate()
+    print("\nValidation Results:")
+    for key, value in val_metrics.items():
+        if isinstance(value, float):
+            print(f"  {key}: {value:.4f}")
+        else:
+            print(f"  {key}: {value}")
+    
+    trainer.log_metrics("eval", val_metrics)
+    trainer.save_metrics("eval", val_metrics)
+    
+    # Evaluate on test set
+    print("\n" + "=" * 80)
+    print("EVALUATING ON TEST SET")
+    print("=" * 80)
+    
+    test_metrics = trainer.evaluate(eval_dataset=tokenized_datasets["test"], metric_key_prefix="test")
+    print("\nTest Results:")
+    for key, value in test_metrics.items():
+        if isinstance(value, float):
+            print(f"  {key}: {value:.4f}")
+        else:
+            print(f"  {key}: {value}")
+    
+    trainer.log_metrics("test", test_metrics)
+    trainer.save_metrics("test", test_metrics)
+    
+    # Generate sample predictions
+    print("\n" + "=" * 80)
+    print("SAMPLE PREDICTIONS")
+    print("=" * 80)
+    
+    # Get 5 random samples from test set
+    test_samples = tokenized_datasets["test"].shuffle(seed=SEED).select(range(5))
+    
+    # Generate predictions
+    predictions = trainer.predict(test_samples)
+    decoded_preds = tokenizer.batch_decode(predictions.predictions, skip_special_tokens=True)
+    
+    # Get original text and reference summaries
+    test_df = pd.read_csv(TEST_FILE)
+    test_samples_df = test_df.sample(n=5, random_state=SEED)
+    
+    for i, (idx, row) in enumerate(test_samples_df.iterrows()):
+        print(f"\n--- Sample {i+1} ---")
+        print(f"Text (first 200 chars): {row['text'][:200]}...")
+        print(f"\nReference Summary: {row['summary']}")
+        print(f"\nGenerated Summary: {decoded_preds[i]}")
+        print("-" * 80)
+    
+    # Save configuration
+    config = {
+        "model_name": MODEL_NAME,
+        "max_input_length": MAX_INPUT_LENGTH,
+        "max_target_length": MAX_TARGET_LENGTH,
+        "batch_size": BATCH_SIZE,
+        "gradient_accumulation_steps": GRADIENT_ACCUMULATION_STEPS,
+        "learning_rate": LEARNING_RATE,
+        "num_epochs": NUM_EPOCHS,
+        "warmup_steps": WARMUP_STEPS,
+        "weight_decay": WEIGHT_DECAY,
+        "train_samples": len(tokenized_datasets["train"]),
+        "val_samples": len(tokenized_datasets["validation"]),
+        "test_samples": len(tokenized_datasets["test"]),
+        "final_val_rougeL": val_metrics.get("eval_rougeL", 0),
+        "final_test_rougeL": test_metrics.get("test_rougeL", 0),
+        "timestamp": timestamp
+    }
+    
+    with open(f"{output_dir}/training_config.json", "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+    
+    print("\n" + "=" * 80)
+    print("TRAINING COMPLETE!")
+    print("=" * 80)
+    print(f"\nModel saved to: {output_dir}/final_model")
+    print(f"Training config saved to: {output_dir}/training_config.json")
+    print(f"\nFinal Validation ROUGE-L: {val_metrics.get('eval_rougeL', 0):.4f}")
+    print(f"Final Test ROUGE-L: {test_metrics.get('test_rougeL', 0):.4f}")
+    
+    target_met = test_metrics.get('test_rougeL', 0) >= 0.55
+    print(f"\nTarget ROUGE-L (0.55-0.6): {'✓ MET' if target_met else '✗ NOT MET'}")
+    
+    return trainer, test_metrics
+
+if __name__ == "__main__":
+    trainer, test_metrics = train_model()

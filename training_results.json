@@ -1,0 +1,70 @@
+{
+  "amharic": {
+    "teacher": {
+      "rouge1": 0.286334,
+      "rouge2": 0.148303,
+      "rougeL": 0.262252
+    },
+    "student": {
+      "rouge1": 0.25289,
+      "rouge2": 0.140057,
+      "rougeL": 0.245231
+    },
+    "retention": {
+      "rouge1": 88.32,
+      "rouge2": 94.44,
+      "rougeL": 93.51
+    }
+  },
+  "hausa": {
+    "teacher": {
+      "rouge1": 0.461777,
+      "rouge2": 0.269293,
+      "rougeL": 0.407908
+    },
+    "student": {
+      "rouge1": 0.425527,
+      "rouge2": 0.257524,
+      "rougeL": 0.379024
+    },
+    "retention": {
+      "rouge1": 92.15,
+      "rouge2": 95.63,
+      "rougeL": 92.92
+    }
+  },
+  "nepali": {
+    "teacher": {
+      "rouge1": 0.36701,
+      "rouge2": 0.193267,
+      "rougeL": 0.342787
+    },
+    "student": {
+      "rouge1": 0.308359,
+      "rouge2": 0.162921,
+      "rougeL": 0.302865
+    },
+    "retention": {
+      "rouge1": 84.02,
+      "rouge2": 84.3,
+      "rougeL": 88.35
+    }
+  },
+  "pashto": {
+    "teacher": {
+      "rouge1": 0.450203,
+      "rouge2": 0.22923,
+      "rougeL": 0.400858
+    },
+    "student": {
+      "rouge1": 0.525389,
+      "rouge2": 0.326784,
+      "rougeL": 0.490711
+    },
+    "retention": {
+      "rouge1": 116.7,
+      "rouge2": 142.56,
+      "rougeL": 122.42
+    }
+  }
+}
