@@ -1,0 +1,142 @@
+[
+  {
+    "checkpoint": "checkpoint-1000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-1000",
+    "rouge1": 0.1970829026081388,
+    "rouge2": 0.05221943212214245,
+    "rougeL": 0.11075335427812665,
+    "semantic_similarity": 0.6959412693977356,
+    "bertscore_f1": 0.6947305202484131,
+    "bleu": 12.357005650957271
+  },
+  {
+    "checkpoint": "checkpoint-1500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-1500",
+    "rouge1": 0.2002398733230417,
+    "rouge2": 0.07013166918211286,
+    "rougeL": 0.12493833717835312,
+    "semantic_similarity": 0.7136660218238831,
+    "bertscore_f1": 0.7123198509216309,
+    "bleu": 7.782359624031656
+  },
+  {
+    "checkpoint": "checkpoint-2000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-2000",
+    "rouge1": 0.2212796059008009,
+    "rouge2": 0.09620938260741072,
+    "rougeL": 0.15625924932162963,
+    "semantic_similarity": 0.7417479157447815,
+    "bertscore_f1": 0.7227603793144226,
+    "bleu": 7.6852180402851795
+  },
+  {
+    "checkpoint": "checkpoint-2500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-2500",
+    "rouge1": 0.22720676024150663,
+    "rouge2": 0.1029436929248314,
+    "rougeL": 0.1666171153339129,
+    "semantic_similarity": 0.7473851442337036,
+    "bertscore_f1": 0.724747359752655,
+    "bleu": 5.9107331621157115
+  },
+  {
+    "checkpoint": "checkpoint-3000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-3000",
+    "rouge1": 0.23516612797444136,
+    "rouge2": 0.11044305326727073,
+    "rougeL": 0.1759367279753971,
+    "semantic_similarity": 0.754753828048706,
+    "bertscore_f1": 0.7286754250526428,
+    "bleu": 8.964803178604315
+  },
+  {
+    "checkpoint": "checkpoint-3500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-3500",
+    "rouge1": 0.23678872406731302,
+    "rouge2": 0.11088795640226687,
+    "rougeL": 0.17769452838858205,
+    "semantic_similarity": 0.7489345669746399,
+    "bertscore_f1": 0.7290443778038025,
+    "bleu": 4.999653906052648
+  },
+  {
+    "checkpoint": "checkpoint-4000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-4000",
+    "rouge1": 0.23974337144906702,
+    "rouge2": 0.11411331728759466,
+    "rougeL": 0.18004287437235397,
+    "semantic_similarity": 0.7496517300605774,
+    "bertscore_f1": 0.729415774345398,
+    "bleu": 5.387727421718454
+  },
+  {
+    "checkpoint": "checkpoint-4500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-4500",
+    "rouge1": 0.24151288130129625,
+    "rouge2": 0.11557432608425716,
+    "rougeL": 0.182006901873571,
+    "semantic_similarity": 0.7505267262458801,
+    "bertscore_f1": 0.7300434708595276,
+    "bleu": 10.387724255123313
+  },
+  {
+    "checkpoint": "checkpoint-500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-500",
+    "rouge1": 0.15641052009860182,
+    "rouge2": 0.03596571221427163,
+    "rougeL": 0.09128657826927203,
+    "semantic_similarity": 0.6776580214500427,
+    "bertscore_f1": 0.6812478303909302,
+    "bleu": 6.8783483002046255
+  },
+  {
+    "checkpoint": "checkpoint-5000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-5000",
+    "rouge1": 0.24226842466819756,
+    "rouge2": 0.11679515208268332,
+    "rougeL": 0.18343832766758575,
+    "semantic_similarity": 0.7489368915557861,
+    "bertscore_f1": 0.7301797866821289,
+    "bleu": 6.899348440523033
+  },
+  {
+    "checkpoint": "checkpoint-5500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-5500",
+    "rouge1": 0.24324757032530878,
+    "rouge2": 0.11760452304484027,
+    "rougeL": 0.18338766735289377,
+    "semantic_similarity": 0.7505106329917908,
+    "bertscore_f1": 0.7300050258636475,
+    "bleu": 14.636367979257827
+  },
+  {
+    "checkpoint": "checkpoint-6000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-6000",
+    "rouge1": 0.24365670317193008,
+    "rouge2": 0.11859171969976728,
+    "rougeL": 0.18521858688877965,
+    "semantic_similarity": 0.7518842220306396,
+    "bertscore_f1": 0.7305020689964294,
+    "bleu": 15.04084472333097
+  },
+  {
+    "checkpoint": "checkpoint-6500",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-6500",
+    "rouge1": 0.24678795058391578,
+    "rouge2": 0.12032863992429792,
+    "rougeL": 0.18609537875656917,
+    "semantic_similarity": 0.7528995275497437,
+    "bertscore_f1": 0.7309162616729736,
+    "bleu": 5.831376465417902
+  },
+  {
+    "checkpoint": "checkpoint-7000",
+    "path": "banglaT5_full_doc_20260215_123349\\checkpoint-7000",
+    "rouge1": 0.24800693036193383,
+    "rouge2": 0.12163867285020742,
+    "rougeL": 0.18846939894902687,
+    "semantic_similarity": 0.754176139831543,
+    "bertscore_f1": 0.7313838005065918,
+    "bleu": 15.980231356995406
+  }
+]

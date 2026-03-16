@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data and datasets
+*.csv
+bangla_train_*.json
+bansum_over_1000_tokens.json
+test_remaining_388.json
+data_splits/
+reduce_data/
+eval_temp/
+
+# Model checkpoints and artifacts
+banglaT5_*/
+*.safetensors
+*.pt
+*.bin
+*.ckpt
+*.npz
+runs/
+logs/
+
+# Large outputs
+pipeline_output.txt
+sample_predictions_output.txt
