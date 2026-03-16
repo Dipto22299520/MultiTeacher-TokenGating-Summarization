@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-02-22 15:16:36",
+  "mode": "test (1000 samples)",
+  "results": {
+    "teacher_32b": "OK",
+    "teacher_14b": "OK",
+    "train_baseline_no_distill": "OK",
+    "train_ewad_cpdp": "OK",
+    "train_single_teacher_32b": "OK",
+    "eval_baseline_no_distill": "FAILED",
+    "eval_ewad_cpdp": "FAILED",
+    "eval_single_teacher_32b": "FAILED"
+  }
+}

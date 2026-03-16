@@ -1,0 +1,29 @@
+{
+  "model_dir": "student_outputs/baseline_no_distill_20260224_005735/best_model",
+  "timestamp": "2026-02-26 06:09:21",
+  "num_test_samples": 2000,
+  "rouge1": 0.26608802983477114,
+  "rouge2": 0.12408327071187235,
+  "rougeL": 0.21602970438423225,
+  "bleu_1": 0.15261139074079397,
+  "bleu_2": 0.10463133569793441,
+  "bleu_4": 0.05520154746405164,
+  "bertscore_precision": 0.7638105154037476,
+  "bertscore_recall": 0.7161415219306946,
+  "bertscore_f1": 0.7389300465583801,
+  "semantic_similarity_mean": 0.7175452578067779,
+  "semantic_similarity_std": 0.14850564360994142,
+  "semantic_similarity_median": 0.7478178143501282,
+  "teacher_analysis": {
+    "teacher_32b_avg_tokens_mean": 67.252,
+    "teacher_32b_avg_tokens_std": 15.399886233346011,
+    "teacher_14b_avg_tokens_mean": 67.252,
+    "teacher_14b_avg_tokens_std": 15.399886233346011,
+    "teacher_mutual_rouge_mean": 1.0,
+    "teacher_mutual_rouge_std": 0.0,
+    "teacher_32b_vs_gold_rouge_mean": 1.0,
+    "teacher_32b_vs_gold_rouge_std": 0.0,
+    "teacher_14b_vs_gold_rouge_mean": 1.0,
+    "teacher_14b_vs_gold_rouge_std": 0.0
+  }
+}

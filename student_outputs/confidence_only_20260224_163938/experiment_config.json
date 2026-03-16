@@ -1,0 +1,21 @@
+{
+  "experiment_name": "confidence_only",
+  "config": {
+    "description": "Confidence-weighted KD (no agreement gate)",
+    "use_distillation": true,
+    "use_ewad": "confidence_only",
+    "use_cpdp": false
+  },
+  "student_model": "Qwen/Qwen2.5-3B",
+  "lora_r": 64,
+  "lora_alpha": 128,
+  "batch_size": 4,
+  "grad_accum": 8,
+  "lr": 0.0002,
+  "epochs": 2,
+  "ewad_tau_w": 1.0,
+  "ewad_k": 5.0,
+  "ewad_delta": 0.5,
+  "cpdp_mu": 0.05,
+  "timestamp": "20260224_163938"
+}

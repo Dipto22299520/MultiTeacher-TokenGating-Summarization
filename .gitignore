@@ -1,0 +1,46 @@
+# Large dataset files
+bansum_lte_1000_tokens.json
+
+# Teacher output JSONL files (large)
+teacher_outputs/
+teacher_outputs_test/
+
+# Student model weights and redundant model files (large / not needed)
+student_outputs/*/best_model/
+student_outputs/*/final_model/
+student_outputs/*/checkpoints/
+
+# Duplicate/incomplete baseline runs (only keep the one with full results)
+student_outputs/baseline_no_distill_20260304_032157/
+student_outputs/baseline_no_distill_20260304_032628/
+student_outputs/baseline_no_distill_20260304_111641/
+student_outputs/baseline_no_distill_20260304_122700/
+student_outputs/baseline_no_distill_20260304_143700/
+student_outputs/baseline_no_distill_20260304_151842/
+student_outputs/baseline_no_distill_20260304_164029/
+student_outputs/baseline_no_distill_20260305_141246/
+student_outputs/baseline_no_distill_20260306_150223/
+student_outputs/baseline_no_distill_20260307_154814/
+student_outputs/baseline_no_distill_20260309_125024/
+student_outputs/baseline_no_distill_20260309_125652/
+student_outputs/baseline_no_distill_20260309_133126/
+student_outputs/baseline_no_distill_20260309_175403/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+
+# Personal notes
+chatgpt.txt
+idead.txt
+plan.txt
+suggestion.txt
+train_test_log.txt
+
+# VS Code
+.vscode/

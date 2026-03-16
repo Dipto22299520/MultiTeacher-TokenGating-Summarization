@@ -1,0 +1,26 @@
+{
+  "original_count": 141200,
+  "after_hard_filters": 136541,
+  "selected_count": 35000,
+  "target_count": 35000,
+  "score_cutoff": 0.9999999999999999,
+  "mean_score": 0.9999999999999998,
+  "filters_applied": [
+    "dedup by article prefix (300 chars)",
+    "article >= 100 words",
+    "summary 15-200 words",
+    "compression ratio 0.05-0.70",
+    "word overlap >= 0.15",
+    "word overlap < 0.98 (not pure copy)",
+    "Bangla char ratio >= 0.40",
+    "not identical article/summary"
+  ],
+  "scoring_weights": {
+    "article_length": 0.15,
+    "summary_length": 0.15,
+    "compression": 0.2,
+    "abstractiveness": 0.2,
+    "relevance": 0.2,
+    "bangla_quality": 0.1
+  }
+}

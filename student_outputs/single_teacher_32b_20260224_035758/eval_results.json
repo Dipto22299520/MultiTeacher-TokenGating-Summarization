@@ -1,0 +1,17 @@
+{
+  "model_dir": "student_outputs/single_teacher_32b_20260224_035758/best_model",
+  "timestamp": "2026-02-26 07:17:35",
+  "num_test_samples": 2000,
+  "rouge1": 0.26141661468190375,
+  "rouge2": 0.12098968185326296,
+  "rougeL": 0.21140197998841748,
+  "bleu_1": 0.14927427159925857,
+  "bleu_2": 0.10192173145627298,
+  "bleu_4": 0.05350986684599462,
+  "bertscore_precision": 0.7607802152633667,
+  "bertscore_recall": 0.7139700651168823,
+  "bertscore_f1": 0.7363535165786743,
+  "semantic_similarity_mean": 0.7115516365543008,
+  "semantic_similarity_std": 0.1512180737518202,
+  "semantic_similarity_median": 0.7397874295711517
+}

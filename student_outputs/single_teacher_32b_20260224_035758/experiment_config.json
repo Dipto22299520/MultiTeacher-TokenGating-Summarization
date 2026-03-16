@@ -1,0 +1,25 @@
+{
+  "experiment_name": "single_teacher_32b",
+  "config": {
+    "description": "32B \u2192 3B only (standard KD)",
+    "use_distillation": true,
+    "teacher_weights": {
+      "32b": 1.0,
+      "14b": 0.0
+    },
+    "use_ewad": false,
+    "use_cpdp": false
+  },
+  "student_model": "Qwen/Qwen2.5-3B",
+  "lora_r": 64,
+  "lora_alpha": 128,
+  "batch_size": 4,
+  "grad_accum": 8,
+  "lr": 0.0002,
+  "epochs": 2,
+  "ewad_tau_w": 1.0,
+  "ewad_k": 5.0,
+  "ewad_delta": 0.5,
+  "cpdp_mu": 0.05,
+  "timestamp": "20260224_035758"
+}
