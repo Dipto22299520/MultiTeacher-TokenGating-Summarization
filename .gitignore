@@ -1,0 +1,31 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.vscode/
+
+# Large datasets
+/data/
+bansum_lte_1000_tokens.json
+
+# Model checkpoints and training outputs
+/banglat5_bansum_20260218_213532/
+/bangla_t5_teacher_finetuned_20251216_143715/
+/mt5_teacher_mt5-base_20260208_124334/
+/mt5_xlsum_20260212_060223/
+/mt5base_bansum_20260219_113113/
+/mt5xlsum_bansum_20260219_062938/
+**/checkpoint-*/
+**/final_model/
+**/logs/
+*.safetensors
+*.pt
+*.bin
+*.pth
+*.ckpt
+
+# Ablation run directories (keep top-level JSONs)
+/ablation_results/*
+!/ablation_results/*.json
+/ablation_results_bansum/*
+!/ablation_results_bansum/*.json

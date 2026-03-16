@@ -1,0 +1,24 @@
+[
+  {
+    "checkpoint": "mT5-base (checkpoint-16000)",
+    "path": "mt5_teacher_mt5-base_20260208_124334/checkpoint-16000",
+    "test_samples": 8033,
+    "rouge1": 0.36606350883767264,
+    "rouge2": 0.19702810462771556,
+    "rougeL": 0.35269501079296295,
+    "semantic_similarity": 0.6781706809997559,
+    "bertscore_f1": 0.7902520204724165,
+    "bleu": 17.286039232097053
+  },
+  {
+    "checkpoint": "mT5-XLSum (checkpoint-12000)",
+    "path": "mt5_xlsum_20260212_060223/checkpoint-12000",
+    "test_samples": 8033,
+    "rouge1": 0.36567277136927007,
+    "rouge2": 0.1962089846618042,
+    "rougeL": 0.3524923969298653,
+    "semantic_similarity": 0.678550124168396,
+    "bertscore_f1": 0.7911962046950303,
+    "bleu": 17.286039232097053
+  }
+]

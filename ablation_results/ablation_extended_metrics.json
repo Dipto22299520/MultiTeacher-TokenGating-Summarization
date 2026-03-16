@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-02-23T11:38:19.275101",
+  "num_test_samples": 8033,
+  "metrics": [
+    "BLEU",
+    "BERTScore",
+    "Semantic Similarity"
+  ],
+  "semantic_model": "paraphrase-multilingual-MiniLM-L12-v2",
+  "results": {
+    "A1_baseline": {
+      "description": "Baseline: Fine-tune student alone (no distillation)",
+      "bleu": 15.79,
+      "bertscore_precision": 0.7814,
+      "bertscore_recall": 0.7921,
+      "bertscore_f1": 0.7863,
+      "semantic_similarity": 0.8678,
+      "num_samples": 8032
+    },
+    "A2_single_kd": {
+      "description": "Single-teacher logit-level KD (BanglaT5, fixed temperature)",
+      "bleu": 15.49,
+      "bertscore_precision": 0.7813,
+      "bertscore_recall": 0.7929,
+      "bertscore_f1": 0.7867,
+      "semantic_similarity": 0.8683,
+      "num_samples": 8033
+    },
+    "A3_multi_teacher": {
+      "description": "Multi-teacher: Logit KD + pseudo-label augmentation from mT5",
+      "bleu": 15.2,
+      "bertscore_precision": 0.7776,
+      "bertscore_recall": 0.7943,
+      "bertscore_f1": 0.7855,
+      "semantic_similarity": 0.8689,
+      "num_samples": 8033
+    },
+    "A4_adaptive_temp": {
+      "description": "Multi-teacher + confidence-adaptive temperature",
+      "bleu": 15.02,
+      "bertscore_precision": 0.7768,
+      "bertscore_recall": 0.7935,
+      "bertscore_f1": 0.7846,
+      "semantic_similarity": 0.8693,
+      "num_samples": 8032
+    },
+    "A5_full_pipeline": {
+      "description": "Full: Multi-teacher + adaptive temp + intermediate matching",
+      "bleu": 15.08,
+      "bertscore_precision": 0.7774,
+      "bertscore_recall": 0.7932,
+      "bertscore_f1": 0.7848,
+      "semantic_similarity": 0.8695,
+      "num_samples": 8032
+    },
+    "Teacher_BanglaT5": {
+      "description": "Teacher: Fine-tuned BanglaT5",
+      "bleu": 16.47,
+      "bertscore_precision": 0.7848,
+      "bertscore_recall": 0.7994,
+      "bertscore_f1": 0.7917,
+      "semantic_similarity": 0.8722,
+      "num_samples": 8033
+    }
+  }
+}

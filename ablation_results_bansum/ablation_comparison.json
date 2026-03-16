@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-03-01T10:28:56.869985",
+  "dataset": "bansum_lte_1000",
+  "student_model": "csebuetnlp/banglat5_small",
+  "teacher_model": "banglat5_bansum_20260218_213532/final_model (BanglaT5 fine-tuned on BanSum)",
+  "pseudo_label_teachers": [
+    "mt5base_bansum_20260219_113113/checkpoint-16000 (mT5-base fine-tuned on BanSum)",
+    "mt5xlsum_bansum_20260219_062938/checkpoint-14000 (mT5-XLSum fine-tuned on BanSum)"
+  ],
+  "results": {
+    "A1_baseline": {
+      "description": "Baseline: Fine-tune student alone (no distillation)",
+      "rouge1": 0.32106520830461655,
+      "rouge2": 0.18340616623713807,
+      "rougeL": 0.25766996072144055,
+      "test_loss": 1.756394386291504,
+      "train_loss": 0.9044011776845786
+    },
+    "A2_single_kd": {
+      "description": "Single-teacher logit-level KD (BanglaT5-BanSum, fixed temperature)",
+      "rouge1": 0.3348512752449876,
+      "rouge2": 0.1920695414437461,
+      "rougeL": 0.27165368974242515,
+      "test_loss": 1.7609158754348755,
+      "train_loss": 0.7772754831287071
+    },
+    "A3_multi_teacher": {
+      "description": "Multi-teacher: Logit KD + pseudo-label augmentation from mT5-BanSum",
+      "rouge1": 0.3402948827426019,
+      "rouge2": 0.19476396593496736,
+      "rougeL": 0.2754986646012401,
+      "test_loss": 1.7947157621383667,
+      "train_loss": 1.1330698928616878
+    },
+    "A4_adaptive_temp": {
+      "description": "Multi-teacher + confidence-adaptive temperature",
+      "rouge1": 0.32483152877136434,
+      "rouge2": 0.18263858432918575,
+      "rougeL": 0.2604230503618664,
+      "test_loss": 1.8097789287567139,
+      "train_loss": 0.8382906957523681
+    }
+  }
+}

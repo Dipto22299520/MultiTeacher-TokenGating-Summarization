@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-02-23T19:36:49.578090",
+  "student_model": "csebuetnlp/banglat5_small",
+  "teacher_model": "csebuetnlp/BanglaT5 (fine-tuned)",
+  "pseudo_label_teachers": [
+    "google/mt5-base",
+    "csebuetnlp/mT5_multilingual_XLSum"
+  ],
+  "results": {
+    "A1_baseline": {
+      "description": "Baseline: Fine-tune student alone (no distillation)",
+      "rouge1": 0.39427251024812915,
+      "rouge2": 0.23205133929849428,
+      "rougeL": 0.3794244928778827,
+      "test_loss": 1.7822134494781494,
+      "train_loss": 4.725057761199916
+    },
+    "A2_single_kd": {
+      "description": "Single-teacher logit-level KD (BanglaT5, fixed temperature)",
+      "rouge1": 0.39448631029499853,
+      "rouge2": 0.2320563230534139,
+      "rougeL": 0.37966049087444825,
+      "test_loss": 1.7777369022369385,
+      "train_loss": 1.3256410166943304
+    },
+    "A3_multi_teacher": {
+      "description": "Multi-teacher: Logit KD + pseudo-label augmentation from mT5",
+      "rouge1": 0.39236361616581744,
+      "rouge2": 0.2301301657963216,
+      "rougeL": 0.377672555642029,
+      "test_loss": 1.870577335357666,
+      "train_loss": 1.2131762299521385
+    },
+    "A4_adaptive_temp": {
+      "description": "Multi-teacher + confidence-adaptive temperature",
+      "rouge1": 0.3913802275942398,
+      "rouge2": 0.22962180011210018,
+      "rougeL": 0.37668531639309805,
+      "test_loss": 1.8848069906234741,
+      "train_loss": 2.667429913378684
+    },
+    "A5_full_pipeline": {
+      "description": "Full: Multi-teacher + adaptive temp + intermediate matching",
+      "rouge1": 0.39141694696262896,
+      "rouge2": 0.2299355665463475,
+      "rougeL": 0.3769495608068111,
+      "test_loss": 1.8832225799560547,
+      "train_loss": 1.2237655804561403
+    }
+  }
+}

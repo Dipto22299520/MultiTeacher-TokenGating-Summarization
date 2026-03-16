@@ -1,0 +1,82 @@
+[
+  {
+    "checkpoint": "checkpoint-10000",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-10000",
+    "rouge1": 0.3571680954886635,
+    "rouge2": 0.18599158458500561,
+    "rougeL": 0.34333623428440363,
+    "semantic_similarity": 0.6767441034317017,
+    "bertscore_f1": 0.789338231086731,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "checkpoint-12000",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-12000",
+    "rouge1": 0.36624443592669126,
+    "rouge2": 0.19569813829960886,
+    "rougeL": 0.3519663837359153,
+    "semantic_similarity": 0.6789980530738831,
+    "bertscore_f1": 0.7913638353347778,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "checkpoint-14000",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-14000",
+    "rouge1": 0.3647484177120198,
+    "rouge2": 0.19260406442542666,
+    "rougeL": 0.34995468737414154,
+    "semantic_similarity": 0.6764762997627258,
+    "bertscore_f1": 0.7909451723098755,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "checkpoint-16000",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-16000",
+    "rouge1": 0.3690259531624655,
+    "rouge2": 0.19837002542521118,
+    "rougeL": 0.3540847848480471,
+    "semantic_similarity": 0.6793305277824402,
+    "bertscore_f1": 0.7919836640357971,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "checkpoint-17580",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-17580",
+    "rouge1": 0.36764203711291477,
+    "rouge2": 0.1969338790552413,
+    "rougeL": 0.35281856008553747,
+    "semantic_similarity": 0.6779817938804626,
+    "bertscore_f1": 0.7916264533996582,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "checkpoint-6000",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-6000",
+    "rouge1": 0.3488467993011909,
+    "rouge2": 0.18378547292920355,
+    "rougeL": 0.3363786689738971,
+    "semantic_similarity": 0.669061541557312,
+    "bertscore_f1": 0.7863339185714722,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "checkpoint-8000",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\checkpoint-8000",
+    "rouge1": 0.3568322593433847,
+    "rouge2": 0.18643839884745456,
+    "rougeL": 0.3420617767931504,
+    "semantic_similarity": 0.6738715767860413,
+    "bertscore_f1": 0.7885318994522095,
+    "bleu": 54.10822690539397
+  },
+  {
+    "checkpoint": "final_model",
+    "path": "mt5_teacher_mt5-base_20260208_124334\\final_model",
+    "rouge1": 0.36764203711291477,
+    "rouge2": 0.1969338790552413,
+    "rougeL": 0.35281856008553747,
+    "semantic_similarity": 0.6779817938804626,
+    "bertscore_f1": 0.7916264533996582,
+    "bleu": 54.10822690539397
+  }
+]

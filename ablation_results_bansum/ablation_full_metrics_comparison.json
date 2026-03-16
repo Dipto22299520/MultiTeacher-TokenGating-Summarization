@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-03-02T11:15:54.329099",
+  "dataset": "bansum_lte_1000",
+  "split": "test",
+  "num_test_samples": 14120,
+  "metrics": [
+    "ROUGE-1",
+    "ROUGE-2",
+    "ROUGE-L",
+    "BLEU",
+    "BERTScore",
+    "Semantic Similarity"
+  ],
+  "semantic_model": "paraphrase-multilingual-MiniLM-L12-v2",
+  "results": {
+    "A1_baseline": {
+      "description": "Baseline: Fine-tune student alone (no distillation)",
+      "model_path": "ablation_results_bansum\\A1_baseline_20260224_121256\\best_model",
+      "num_samples": 14120,
+      "rouge1": 0.2957,
+      "rouge2": 0.1389,
+      "rougeL": 0.2314,
+      "bleu": 11.67,
+      "bertscore_precision": 0.7405,
+      "bertscore_recall": 0.7492,
+      "bertscore_f1": 0.7441,
+      "semantic_similarity": 0.7538
+    },
+    "A2_single_kd": {
+      "description": "Single-teacher logit-level KD (BanglaT5-BanSum, fixed temp)",
+      "model_path": "ablation_results_bansum\\A2_single_kd_20260225_120221\\best_model",
+      "num_samples": 14120,
+      "rouge1": 0.3057,
+      "rouge2": 0.1462,
+      "rougeL": 0.2435,
+      "bleu": 12.05,
+      "bertscore_precision": 0.7454,
+      "bertscore_recall": 0.7534,
+      "bertscore_f1": 0.7486,
+      "semantic_similarity": 0.7603
+    },
+    "A3_multi_teacher": {
+      "description": "Multi-teacher: Logit KD + pseudo-label augmentation",
+      "model_path": "ablation_results_bansum\\A3_multi_teacher_20260226_095657\\best_model",
+      "num_samples": 14120,
+      "rouge1": 0.3014,
+      "rouge2": 0.1444,
+      "rougeL": 0.2405,
+      "bleu": 11.84,
+      "bertscore_precision": 0.7427,
+      "bertscore_recall": 0.7517,
+      "bertscore_f1": 0.7465,
+      "semantic_similarity": 0.7584
+    },
+    "A4_adaptive_temp": {
+      "description": "Multi-teacher + confidence-adaptive temperature",
+      "model_path": "ablation_results_bansum\\A4_adaptive_temp_20260227_192419\\best_model",
+      "num_samples": 14120,
+      "rouge1": 0.2866,
+      "rouge2": 0.1352,
+      "rougeL": 0.2253,
+      "bleu": 10.88,
+      "bertscore_precision": 0.7374,
+      "bertscore_recall": 0.7427,
+      "bertscore_f1": 0.7393,
+      "semantic_similarity": 0.7443
+    },
+    "A5_full_pipeline": {
+      "description": "Full: Multi-teacher + adaptive temp + intermediate matching",
+      "model_path": "ablation_results_bansum\\A5_full_pipeline_20260228_034939_batch16_backup\\best_model",
+      "num_samples": 14120,
+      "rouge1": 0.2881,
+      "rouge2": 0.1361,
+      "rougeL": 0.2268,
+      "bleu": 10.87,
+      "bertscore_precision": 0.7365,
+      "bertscore_recall": 0.7429,
+      "bertscore_f1": 0.7391,
+      "semantic_similarity": 0.7466
+    }
+  }
+}

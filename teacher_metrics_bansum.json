@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-03-14T18:29:02.025874",
+  "dataset": "bansum_lte_1000",
+  "split": "test",
+  "num_test_samples": 14120,
+  "metrics": [
+    "BLEU",
+    "BERTScore",
+    "Semantic Similarity"
+  ],
+  "semantic_model": "paraphrase-multilingual-MiniLM-L12-v2",
+  "results": {
+    "mt5base_bansum": {
+      "description": "mT5-base fine-tuned on BanSum (checkpoint-16000)",
+      "model_path": "mt5base_bansum_20260219_113113/checkpoint-16000",
+      "bleu": 7.1,
+      "bertscore_precision": 0.7443,
+      "bertscore_recall": 0.7312,
+      "bertscore_f1": 0.7371,
+      "semantic_similarity": 0.7238,
+      "num_samples": 14120
+    },
+    "mt5xlsum_bansum": {
+      "description": "mT5-XLSum fine-tuned on BanSum (checkpoint-14000)",
+      "model_path": "mt5xlsum_bansum_20260219_062938/checkpoint-14000",
+      "bleu": 7.91,
+      "bertscore_precision": 0.7415,
+      "bertscore_recall": 0.7385,
+      "bertscore_f1": 0.7394,
+      "semantic_similarity": 0.7449,
+      "num_samples": 14120
+    },
+    "banglaT5_bansum": {
+      "description": "BanglaT5 fine-tuned on BanSum (checkpoint-14000)",
+      "model_path": "banglat5_bansum_20260218_213532/final_model",
+      "bleu": 12.58,
+      "bertscore_precision": 0.7521,
+      "bertscore_recall": 0.7569,
+      "bertscore_f1": 0.7537,
+      "semantic_similarity": 0.7621,
+      "num_samples": 14120
+    }
+  }
+}
